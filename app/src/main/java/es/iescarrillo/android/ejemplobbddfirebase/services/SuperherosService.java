@@ -40,5 +40,20 @@ public class SuperherosService {
     public void deleteSuperhero(Superhero superhero){
         database.child(superhero.getId()).removeValue();
     }
+    
+    public void getSuperherosOrderByName(ValueEventListener listener){
+        Query query = database.orderByChild("name");
+        query.addValueEventListener(listener);
+    }
+
+    public void getSuperherosGetSpiderman(ValueEventListener listener){
+        Query query = database.orderByChild("name").equalTo("Spider-Man2");
+        query.addValueEventListener(listener);
+    }
+
+    public void getSuperherosByName(String name, ValueEventListener listener){
+        Query query = database.orderByChild("name").equalTo(name);
+        query.addValueEventListener(listener);
+    }
 
 }

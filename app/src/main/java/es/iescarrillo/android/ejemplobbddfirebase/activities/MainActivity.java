@@ -50,8 +50,32 @@ public class MainActivity extends AppCompatActivity {
         ListView lvSuperheros = findViewById(R.id.lvSuperheros);
 
 
+        superherosService.getSuperherosGetSpiderman(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Limpiamos los datos de la lista, sino se duplicarán
+                superheros.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()/* Esta lista de elementos ya viene filtrada con la query*/) {
+                    // Convierte cada nodo de la base de datos a un objeto Superhero
+                    Superhero superhero = snapshot.getValue(Superhero.class);
+                    superheros.add(superhero);
+                }
+
+                // Una vez los datos añadidos a nuestra lista, se la pasamos al adaptador
+                adapter = new SuperheroAdapter(getApplicationContext(), superheros);
+                lvSuperheros.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Maneja errores de lectura de la base de datos si es necesario
+                Log.w("Firebase", "Error en la lectura de la base de datos", databaseError.toException());
+            }
+        });
+
         // Añadimos le listener, que estará en continua ejecución comprobando si hay algún cambio
-        dbSuperheros.addValueEventListener(new ValueEventListener() {
+        /*dbSuperheros.addValueEventListener(new ValueEventListener() {
                         // El método onDataChange se llama cada vez que los datos en la base de datos cambian
                        @Override
                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -74,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                            // Maneja errores de lectura de la base de datos si es necesario
                            Log.w("Firebase", "Error en la lectura de la base de datos", databaseError.toException());
                        }
-                   });
+                   });*/
 
         lvSuperheros.setOnItemClickListener((parent, view, position, id) -> {
             Superhero superhero = (Superhero) parent.getItemAtPosition(position);
