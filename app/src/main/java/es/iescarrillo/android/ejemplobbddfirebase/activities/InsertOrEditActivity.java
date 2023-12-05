@@ -17,14 +17,15 @@ import es.iescarrillo.android.ejemplobbddfirebase.services.SuperherosService;
 public class InsertOrEditActivity extends AppCompatActivity {
 
     // Declaramos los componentes de la vista
-    EditText etName, etPowers;
-    Switch swActive;
-    Button btnSave, btnCancel;
+    private EditText etName, etPowers;
+    private Switch swActive;
+    private Button btnSave, btnCancel;
 
     // Declaramos los servicios que vamos a necesitar
-    SuperherosService superherosService;
+    private SuperherosService superherosService;
 
-    Boolean editMode;
+    private Boolean editMode;
+    private Superhero superhero;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
         // Obtenemos los componentes de la vista
         getComponentFromView();
 
-        Superhero superhero = new Superhero();
+        superhero = new Superhero();
         Intent intent = getIntent();
         editMode = intent.getBooleanExtra("edit",false);
         // Si estamos editando cargamos los datos
@@ -50,18 +51,17 @@ public class InsertOrEditActivity extends AppCompatActivity {
         }
 
         // Funcionales de los botones
-        final Superhero finalSuperhero = superhero; // Para poder usarlo en la expresión lambda
         btnSave.setOnClickListener(v -> {
             // Asignamos los valores introducidos
-            finalSuperhero.setName(etName.getText().toString());
-            finalSuperhero.setPowers(Arrays.asList(etPowers.getText().toString().split(",")));
-            finalSuperhero.setActive(swActive.isChecked());
+            superhero.setName(etName.getText().toString());
+            superhero.setPowers(Arrays.asList(etPowers.getText().toString().split(",")));
+            superhero.setActive(swActive.isChecked());
 
             // Llamamos al servicio
             if(editMode)
-                superherosService.updateSuperhero(finalSuperhero);
+                superherosService.updateSuperhero(superhero);
             else
-                superherosService.insert(finalSuperhero);
+                superherosService.insertSuperhero(superhero);
 
             Intent intentMain = new Intent(this, MainActivity.class);
             startActivity(intentMain);

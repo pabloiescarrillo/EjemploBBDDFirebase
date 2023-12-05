@@ -1,27 +1,18 @@
 package es.iescarrillo.android.ejemplobbddfirebase.services;
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import es.iescarrillo.android.ejemplobbddfirebase.adapters.SuperheroAdapter;
 import es.iescarrillo.android.ejemplobbddfirebase.models.Superhero;
 
 public class SuperherosService {
 
     // Referencia de la base de datos
-    DatabaseReference database;
+    private DatabaseReference database;
 
     // Constructor vacío
     public SuperherosService(Context context){
@@ -29,7 +20,7 @@ public class SuperherosService {
         database = FirebaseDatabase.getInstance().getReference().child("superheros");
     }
 
-    public void insert(Superhero superhero) {
+    public void insertSuperhero(Superhero superhero) {
         // Utiliza push() para obtener una clave única y agregar el mensaje
         DatabaseReference newReference = database.push();
         superhero.setId(newReference.getKey()); // Asigna el ID generado automáticamente
@@ -45,4 +36,9 @@ public class SuperherosService {
     public void deleteSuperhero(String id) {
         database.child(id).removeValue();
     }
+
+    public void deleteSuperhero(Superhero superhero){
+        database.child(superhero.getId()).removeValue();
+    }
+
 }

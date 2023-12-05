@@ -7,7 +7,7 @@ public class Superhero implements Serializable {
     private String id;
     private  String name;
     private List<String> powers;
-    private boolean active;
+    private Boolean active;
 
     public Superhero(){
         super();
@@ -37,11 +37,11 @@ public class Superhero implements Serializable {
         this.powers = powers;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }

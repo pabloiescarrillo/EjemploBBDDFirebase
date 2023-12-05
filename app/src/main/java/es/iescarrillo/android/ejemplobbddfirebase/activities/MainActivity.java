@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import es.iescarrillo.android.ejemplobbddfirebase.R;
@@ -29,9 +30,9 @@ import es.iescarrillo.android.ejemplobbddfirebase.services.SuperherosService;
 public class MainActivity extends AppCompatActivity {
 
     // Variables globales de la clase
-    SuperheroAdapter adapter;
-    Button btnInsert;
-    SuperherosService superherosService;
+    private SuperheroAdapter adapter;
+    private Button btnInsert;
+    private SuperherosService superherosService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         // Inicializamos la lista de superhéroes que le vamos a pasar a nuestro adaptador
         List<Superhero> superheros = new ArrayList<>();
         ListView lvSuperheros = findViewById(R.id.lvSuperheros);
+
 
         // Añadimos le listener, que estará en continua ejecución comprobando si hay algún cambio
         dbSuperheros.addValueEventListener(new ValueEventListener() {
