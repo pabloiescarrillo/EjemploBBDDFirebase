@@ -1,13 +1,18 @@
 package es.iescarrillo.android.ejemplobbddfirebase.models;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.io.Serializable;
 import java.util.List;
 
+@IgnoreExtraProperties
 public class Superhero implements Serializable {
     private String id;
     private  String name;
     private List<String> powers;
     private Boolean active;
+
+    private String filmId;
 
     public Superhero(){
         super();
@@ -43,5 +48,13 @@ public class Superhero implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public String getFilmId() {
+        return filmId;
+    }
+
+    public void setFilmId(String filmId) {
+        this.filmId = filmId;
     }
 }

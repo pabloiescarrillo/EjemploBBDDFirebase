@@ -27,6 +27,7 @@ public class SuperheroAdapter extends ArrayAdapter<Superhero> {
 
         // Reutiliza una vista existente o crea una nueva si es necesario
         if (convertView == null) {
+            // Indicamos la vista plantilla
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_superhero, parent, false);
         }
 
@@ -36,6 +37,7 @@ public class SuperheroAdapter extends ArrayAdapter<Superhero> {
         TextView tvPowers = convertView.findViewById(R.id.tvPowers);
         Switch swActive = convertView.findViewById(R.id.swActive);
 
+        // Modificamos el texto a mostrar
         tvId.setText("Id: " + superhero.getId());
         tvName.setText("Name: " + superhero.getName());
         tvPowers.setText("Powers: " + superhero.getPowers().toString());

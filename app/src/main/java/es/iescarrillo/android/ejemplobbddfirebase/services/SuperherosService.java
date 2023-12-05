@@ -56,4 +56,9 @@ public class SuperherosService {
         query.addValueEventListener(listener);
     }
 
+    public void getSuperherosByFilmId(String filmId, ValueEventListener listener){
+        Query query = database.orderByChild("filmId").equalTo(filmId);
+        query.addValueEventListener(listener);
+    }
+
 }
