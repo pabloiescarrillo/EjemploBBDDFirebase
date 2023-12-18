@@ -24,7 +24,7 @@ public class SuperherosService {
         // Utiliza push() para obtener una clave única y agregar el mensaje
         DatabaseReference newReference = database.push();
         superhero.setId(newReference.getKey()); // Asigna el ID generado automáticamente
-        superhero.setAvatar("gs://ejemplobbddfirebase.appspot.com/avatars/"+superhero.getId());
+        superhero.setAvatar("avatars/"+superhero.getId());
 
         // Ahora, utiliza setValue() en la nueva referencia para agregar el nuevo mensaje
         newReference.setValue(superhero);

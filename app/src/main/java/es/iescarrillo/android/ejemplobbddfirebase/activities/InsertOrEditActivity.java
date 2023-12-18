@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 
 import es.iescarrillo.android.ejemplobbddfirebase.R;
@@ -54,6 +57,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
 
     // Creamos la referencia a Firebase Storage
     private StorageReference storageReference;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
             etPowers.setText(superhero.getPowers().toString().replace("[", "").replace("]", ""));
             swActive.setChecked(superhero.isActive());
             if(!superhero.getAvatar().isEmpty())
-                loadImage(superhero.getAvatar());
+                Picasso.get().load(Uri.parse(superhero.getAvatar())).into(ivAvatar);
         }
 
         // Funcionales de los botones
@@ -96,6 +100,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
             superhero.setPowers(Arrays.asList(etPowers.getText().toString().split(",")));
             superhero.setActive(swActive.isChecked());
 
+            String url="";
             // Llamamos al servicio
             if(editMode) {
                 superherosService.updateSuperhero(superhero);
@@ -104,6 +109,8 @@ public class InsertOrEditActivity extends AppCompatActivity {
                 idSuperhero = superherosService.insertSuperhero(superhero);
                 uploadImage(idSuperhero);
             }
+
+            Log.i("url", url);
 
             Intent intentMain = new Intent(this, MainActivity.class);
             startActivity(intentMain);
@@ -127,6 +134,19 @@ public class InsertOrEditActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful()) ;
+                if (uriTask.isSuccessful()) {
+                    uriTask.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            url= uri.toString();
+
+                            superhero.setAvatar(url);
+                            superherosService.updateSuperhero(superhero);
+                        }
+                    });
+                }
                 Toast.makeText(getApplicationContext(), "Save superhero", Toast.LENGTH_SHORT).show();
             }
         });
@@ -134,7 +154,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
 
     private void loadImage(String url) {
         // Obtener la referencia de la imagen en Firebase Storage
-        StorageReference storageRef = storageReference.child("avatars/-Nlvzrj92SzA-R2GmNYn");
+        StorageReference storageRef = storageReference.child(url);
 
         // Cargar imagen utilizando Picasso
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -174,7 +194,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
     private Uri getImageUri(Context context, ImageView imageView, String name) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, name, null);
         return Uri.parse(path);
     }
