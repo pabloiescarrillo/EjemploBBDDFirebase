@@ -57,6 +57,8 @@ public class DetailActivity extends AppCompatActivity {
         tvPowers.setText(superhero.getPowers().toString());
         if(!superhero.getAvatar().isEmpty())
             Picasso.get().load(superhero.getAvatar()).into(ivAvatarDetail);
+        else
+            Picasso.get().load(R.mipmap.icono).into(ivAvatarDetail);
 
         btnDelete.setOnClickListener(v -> {
             superherosService.deleteSuperhero(superhero.getId());
