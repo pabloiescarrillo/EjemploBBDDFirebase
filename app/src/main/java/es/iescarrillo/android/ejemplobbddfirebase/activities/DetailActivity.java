@@ -57,8 +57,6 @@ public class DetailActivity extends AppCompatActivity {
         tvPowers.setText(superhero.getPowers().toString());
         if(!superhero.getAvatar().isEmpty())
             Picasso.get().load(superhero.getAvatar()).into(ivAvatarDetail);
-        else
-            Picasso.get().load("https://img.freepik.com/vector-premium/lindo-superheroe-volando-ilustracion-dibujos-animados-concepto-icono-profesion-personas_138676-1911.jpg?w=2000").into(ivAvatarDetail);
 
         btnDelete.setOnClickListener(v -> {
             superherosService.deleteSuperhero(superhero.getId());

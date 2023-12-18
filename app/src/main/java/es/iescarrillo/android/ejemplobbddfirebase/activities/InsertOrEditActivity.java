@@ -83,7 +83,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
             etName.setText(superhero.getName());
             etPowers.setText(superhero.getPowers().toString().replace("[", "").replace("]", ""));
             swActive.setChecked(superhero.isActive());
-            if(!superhero.getAvatar().isEmpty())
+            if(!superhero.getAvatar().isEmpty()) // Cargamos la imagen con la librería de Picasso si tiene imagen asociada
                 Picasso.get().load(Uri.parse(superhero.getAvatar())).into(ivAvatar);
         }
 
@@ -123,15 +123,26 @@ public class InsertOrEditActivity extends AppCompatActivity {
 
     }
 
+    // Médoto para cargar al imagen en Firebase Storage
     private void uploadImage(String idSuperhero){
+        /* Llamamos al método getImagenUri creado por nosotros para obtener la URI de una imagen
+        almacenada en un ImagenView, le pasamos también el id del superhérore ya que el nombre
+        de la imagen almacenada se identificará con el id del superhérore
+        * */
         Uri file = getImageUri(this, ivAvatar, idSuperhero);
+
+        // Obtenemos la nueva referencia
         StorageReference storageRefSuperhero = storageReference.child(idSuperhero);
+
+        // Llamamos al método putFile, el cuál recibe un objeto URI, el que hemos obtenido anteriormente
         storageRefSuperhero.putFile(file).addOnFailureListener(new OnFailureListener() {
+            // Método que se ejecutará si se produce un fallo
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            // Método que se ejecutará si todo sale bien
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
@@ -140,7 +151,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
                     uriTask.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            url= uri.toString();
+                            url= uri.toString(); // Aquí vamos a obtener la url de la imagen para actualizar la propiedad del superheroe
 
                             superhero.setAvatar(url);
                             superherosService.updateSuperhero(superhero);
@@ -152,20 +163,8 @@ public class InsertOrEditActivity extends AppCompatActivity {
         });
     }
 
-    private void loadImage(String url) {
-        // Obtener la referencia de la imagen en Firebase Storage
-        StorageReference storageRef = storageReference.child(url);
 
-        // Cargar imagen utilizando Picasso
-        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Utiliza Picasso para cargar la imagen desde la URL y mostrarla en el ImageView
-                Picasso.get().load(uri).into(ivAvatar);
-            }
-        });
-    }
-
+    // Método para abrir la galería
     private void openGallery(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -173,6 +172,7 @@ public class InsertOrEditActivity extends AppCompatActivity {
         imageActivityResultLauncher.launch(intent);
     }
 
+    // Método para cargar la imagen seleccionada en la galería en el ImagenView
     private ActivityResultLauncher<Intent> imageActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
