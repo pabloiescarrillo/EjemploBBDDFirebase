@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
 
         tvName.setText(superhero.getName());
         tvPowers.setText(superhero.getPowers().toString());
-        if(!superhero.getAvatar().isEmpty())
+        if(superhero.getAvatar() !=null && !superhero.getAvatar().isEmpty())
             Picasso.get().load(superhero.getAvatar()).into(ivAvatarDetail);
         else
             Picasso.get().load(R.mipmap.icono).into(ivAvatarDetail);
