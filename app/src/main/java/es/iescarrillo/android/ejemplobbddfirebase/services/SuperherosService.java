@@ -20,13 +20,15 @@ public class SuperherosService {
         database = FirebaseDatabase.getInstance().getReference().child("superheros");
     }
 
-    public void insertSuperhero(Superhero superhero) {
+    public String insertSuperhero(Superhero superhero) {
         // Utiliza push() para obtener una clave única y agregar el mensaje
         DatabaseReference newReference = database.push();
         superhero.setId(newReference.getKey()); // Asigna el ID generado automáticamente
+        superhero.setAvatar("gs://ejemplobbddfirebase.appspot.com/avatars/"+superhero.getId());
 
         // Ahora, utiliza setValue() en la nueva referencia para agregar el nuevo mensaje
         newReference.setValue(superhero);
+        return superhero.getId();
     }
 
     public void updateSuperhero(Superhero superhero) {

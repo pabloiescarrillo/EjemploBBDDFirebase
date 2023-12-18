@@ -16,6 +16,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="25dp"
+            android:clickable="true"
+            android:src="@mipmap/icono"
+            tools:ignore="SpeakableTextPresentCheck" />
+
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
@@ -49,6 +58,8 @@
             android:text="Active"
             android:layout_margin="25dp"
             android:textSize="18sp" />
+
+
 
     </LinearLayout>
 

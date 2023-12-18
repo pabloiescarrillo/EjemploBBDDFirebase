@@ -11,6 +11,7 @@ public class Superhero implements Serializable {
     private  String name;
     private List<String> powers;
     private Boolean active;
+    private String avatar;
 
     private String filmId;
 
@@ -56,5 +57,13 @@ public class Superhero implements Serializable {
 
     public void setFilmId(String filmId) {
         this.filmId = filmId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
